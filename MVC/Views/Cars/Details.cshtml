@@ -1,0 +1,134 @@
+@model APP.Models.CarResponse
+
+@{
+    ViewData["Title"] = "Car Details";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-info-circle"></i> Car Details</h1>
+    <div>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Edit
+            </a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Delete
+            </a>
+        }
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">@Model.DisplayName</h3>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Brand</dt>
+                    <dd class="col-sm-8"><strong>@Model.Brand</strong></dd>
+                    
+                    <dt class="col-sm-4">Model</dt>
+                    <dd class="col-sm-8"><strong>@Model.Model</strong></dd>
+                    
+                    <dt class="col-sm-4">Year</dt>
+                    <dd class="col-sm-8">@Model.Year</dd>
+                    
+                    <dt class="col-sm-4">License Plate</dt>
+                    <dd class="col-sm-8">
+                        @if (!string.IsNullOrEmpty(Model.LicensePlate))
+                        {
+                            <span class="badge bg-secondary fs-6">@Model.LicensePlate</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Not specified</span>
+                        }
+                    </dd>
+                    
+                    <dt class="col-sm-4">Color</dt>
+                    <dd class="col-sm-8">@(Model.Color ?? "Not specified")</dd>
+                </dl>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Pricing & Availability</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Daily Rate</dt>
+                    <dd class="col-sm-8">
+                        <h4 class="text-success mb-0">@Model.PriceFormatted</h4>
+                    </dd>
+                    
+                    <dt class="col-sm-4">Status</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.IsAvailable)
+                        {
+                            <span class="badge bg-success fs-6">
+                                <i class="bi bi-check-circle"></i> Available for Rent
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger fs-6">
+                                <i class="bi bi-x-circle"></i> Currently Rented
+                            </span>
+                        }
+                    </dd>
+                </dl>
+                
+                @if (Model.IsAvailable)
+                {
+                    <div class="alert alert-success mt-3">
+                        <i class="bi bi-info-circle"></i> This car is available for immediate rental!
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning mt-3">
+                        <i class="bi bi-exclamation-triangle"></i> This car is currently being rented.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="card-title">Quick Actions</h5>
+                <div class="d-grid gap-2">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                            <i class="bi bi-pencil-square"></i> Edit Car
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                            <i class="bi bi-trash-fill"></i> Delete Car
+                        </a>
+                    }
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-list"></i> View All Cars
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6 class="card-title">Car Information</h6>
+                <p class="small text-muted mb-1"><strong>ID:</strong> #@Model.Id</p>
+                <p class="small text-muted mb-0"><strong>Status:</strong> @Model.AvailabilityStatus</p>
+            </div>
+        </div>
+    </div>
+</div>
+

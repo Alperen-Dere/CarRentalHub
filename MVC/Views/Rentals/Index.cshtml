@@ -1,0 +1,109 @@
+@model List<APP.Models.RentalResponse>
+
+@{
+    ViewData["Title"] = "Rentals";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-calendar-check"></i> Rentals</h1>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Create New Rental
+    </a>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> No rentals found. <a asp-action="Create">Create one now?</a>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Rental ID</th>
+                    <th>Car</th>
+                    <th>Customer</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Duration</th>
+                    <th>Total Cost</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var rental in Model)
+                {
+                    <tr>
+                        <td><strong>#@rental.Id</strong></td>
+                        <td>
+                            <i class="bi bi-car-front-fill"></i> @rental.CarName
+                        </td>
+                        <td>
+                            <i class="bi bi-person"></i> @rental.CustomerName
+                        </td>
+                        <td>@rental.StartDateFormatted</td>
+                        <td>@rental.EndDateFormatted</td>
+                        <td>@rental.DurationText</td>
+                        <td><strong>@rental.TotalCostFormatted</strong></td>
+                        <td>
+                            @switch (rental.Status)
+                            {
+                                case "Pending":
+                                    <span class="badge bg-warning">Pending</span>
+                                    break;
+                                case "Active":
+                                    <span class="badge bg-success">Active</span>
+                                    break;
+                                case "Completed":
+                                    <span class="badge bg-secondary">Completed</span>
+                                    break;
+                                case "Cancelled":
+                                    <span class="badge bg-danger">Cancelled</span>
+                                    break;
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a asp-action="Details" asp-route-id="@rental.Id" class="btn btn-info" title="Details">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@rental.Id" class="btn btn-warning" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-action="Delete" asp-route-id="@rental.Id" class="btn btn-danger" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="alert alert-secondary">
+                <strong>Total Rentals:</strong> @Model.Count
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="alert alert-success">
+                <strong>Active:</strong> @Model.Count(r => r.Status == "Active")
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="alert alert-info">
+                <strong>Total Revenue:</strong> $@Model.Sum(r => r.TotalCost).ToString("F2")
+            </div>
+        </div>
+    </div>
+}
+

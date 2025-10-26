@@ -1,0 +1,86 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4"><i class="bi bi-car-front-fill"></i> Welcome to CarRentalHub</h1>
+    <p class="lead">Your trusted partner for car rental services</p>
+</div>
+
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-car-front-fill text-primary" style="font-size: 3rem;"></i>
+                    <h5 class="card-title mt-3">Browse Cars</h5>
+                    <p class="card-text">View our fleet of available vehicles</p>
+                    <a asp-controller="Cars" asp-action="Index" class="btn btn-primary">
+                        <i class="bi bi-arrow-right-circle"></i> View Cars
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+        {
+            <div class="col-md-4">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-people-fill text-success" style="font-size: 3rem;"></i>
+                        <h5 class="card-title mt-3">Customers</h5>
+                        <p class="card-text">Manage customer information</p>
+                        <a asp-controller="Customers" asp-action="Index" class="btn btn-success">
+                            <i class="bi bi-arrow-right-circle"></i> Manage
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-calendar-check-fill text-info" style="font-size: 3rem;"></i>
+                        <h5 class="card-title mt-3">Rentals</h5>
+                        <p class="card-text">View and manage all rentals</p>
+                        <a asp-controller="Rentals" asp-action="Index" class="btn btn-info">
+                            <i class="bi bi-arrow-right-circle"></i> Manage
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="col-md-8">
+                <div class="alert alert-info">
+                    <h4><i class="bi bi-info-circle"></i> Customer Account</h4>
+                    <p>You're logged in as a <strong>Customer</strong>. You can browse our available cars.</p>
+                    <p class="mb-0">For rental requests or more information, please contact our staff.</p>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="row mt-5 justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h3>Get Started</h3>
+                    <p>Sign in to browse our cars or create a new account</p>
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg">
+                            <i class="bi bi-box-arrow-in-right"></i> Sign In
+                        </a>
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-success btn-lg">
+                            <i class="bi bi-person-plus"></i> Create Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
