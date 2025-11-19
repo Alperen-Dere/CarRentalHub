@@ -2,10 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace APP.Domain.Entities;
 
-public class Customer
+public class Customer : Entity
 {
-    public int Id { get; set; }
-    
     [Required]
     [StringLength(100)]
     public string FullName { get; set; } = string.Empty;

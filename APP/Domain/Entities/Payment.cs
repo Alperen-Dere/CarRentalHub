@@ -2,10 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace APP.Domain.Entities;
 
-public class Payment
+public class Payment : Entity
 {
-    public int Id { get; set; }
-    
     public int RentalId { get; set; }
     public Rental Rental { get; set; } = null!;
     

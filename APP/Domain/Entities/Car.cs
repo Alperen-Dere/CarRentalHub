@@ -1,11 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace APP.Domain.Entities;
+namespace APP.Domain.Entities;// 
 
-public class Car
+public class Car : Entity 
 {
-    public int Id { get; set; }
-    
     [Required]
     [StringLength(50)]
     public string Brand { get; set; } = string.Empty;

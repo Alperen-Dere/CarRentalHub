@@ -10,7 +10,7 @@ namespace CORE.Services;
 /// <typeparam name="TRequest">Request DTO</typeparam>
 /// <typeparam name="TResponse">Response DTO</typeparam>
 public abstract class ServiceBase<TEntity, TRequest, TResponse> : IService<TRequest, TResponse>
-    where TEntity : class, new()
+    where TEntity : Entity, new() 
 {
     protected readonly DbContext _context;
     
@@ -42,13 +42,14 @@ public abstract class ServiceBase<TEntity, TRequest, TResponse> : IService<TRequ
     /// <summary>
     /// Creates a new entity
     /// </summary>
-    public virtual CommandResult Create(TRequest request)
+    public virtual CommandResult Create(TRequest request, bool save = true)
     {
         try
         {
             var entity = ToEntity(request);
             GetDbSet().Add(entity);
-            _context.SaveChanges();
+            if (save)
+                Save();
             
             return CommandResult.Success("Record created successfully");
         }
@@ -57,17 +58,21 @@ public abstract class ServiceBase<TEntity, TRequest, TResponse> : IService<TRequ
             return CommandResult.Failure($"Error creating record: {ex.Message}");
         }
     }
+
+    public virtual int Save() => 
+        _context.SaveChanges();
     
     /// <summary>
     /// Updates an existing entity
     /// </summary>
-    public virtual CommandResult Update(TRequest request)
+    public virtual CommandResult Update(TRequest request, bool save = true)
     {
         try
         {
             var entity = ToEntity(request);
             GetDbSet().Update(entity);
-            _context.SaveChanges();
+            if (save)
+                Save();
             
             return CommandResult.Success("Record updated successfully");
         }
@@ -80,7 +85,7 @@ public abstract class ServiceBase<TEntity, TRequest, TResponse> : IService<TRequ
     /// <summary>
     /// Deletes an entity by ID
     /// </summary>
-    public virtual CommandResult Delete(int id)
+    public virtual CommandResult Delete(int id, bool save = true)
     {
         try
         {
@@ -91,7 +96,8 @@ public abstract class ServiceBase<TEntity, TRequest, TResponse> : IService<TRequ
             }
             
             GetDbSet().Remove(entity);
-            _context.SaveChanges();
+            if (save)
+                Save();
             
             return CommandResult.Success("Record deleted successfully");
         }

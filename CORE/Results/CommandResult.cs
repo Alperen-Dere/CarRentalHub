@@ -7,7 +7,7 @@ public class CommandResult
 {
     public bool IsSuccess { get; set; }
     public string? Message { get; set; }
-    public object? Data { get; set; }
+    public object? Data { get; set; } // should be generic type, not object
     
     /// <summary>
     /// Creates a successful result

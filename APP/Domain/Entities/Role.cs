@@ -2,10 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace APP.Domain.Entities;
 
-public class Role
+public class Role : Entity
 {
-    public int Id { get; set; }
-    
     [Required]
     [StringLength(50)]
     public string Name { get; set; } = string.Empty;
